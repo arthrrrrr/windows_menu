@@ -20,7 +20,18 @@ import numpy as np
 import pyautogui
 import requests
 import urllib.request
+import wikipedia as wiki
+from plyer import notification
+import re
+import urllib.request
 failsafe = "menu.py"
+def color_camera():
+        exec(open("color-camera.py").read())
+def grey_camera():
+        exec(open("grey-camera.py").read())
+def wait():
+        while True:
+                keyboard.wait("1")
 def closeexplorer():
         c="explorer.exe"
         os.system("taskkill /f /im"+ c)
@@ -29,8 +40,8 @@ def recmouse():
         eventmouse = mouse.record()
 def replaymouse():
         mouse.play(eventmouse[:-1])
-keyboard.add_hotkey("ctrl+shift+e", lambda: menu)
-keyboard.add_hotkey("ctrl+shift+e", lambda: menu)
+
+
 def readurl():
         global read, enter_url, submit_url
         read=tk.Tk()
@@ -42,14 +53,11 @@ def readurl():
         enter_url.focus()
         enter_url.place(x=20, y=20)
         
-        submit_url=tk.Button(read, text="requests", command=print_url)
-        submit_url.place(x=20, y=150)
+
         
-        submit_url_urllib=tk.Button(read, text="urllib      ", command=print_url_urllib)
-        submit_url_urllib.place(x=20, y=175)
+
         
-        sshow_url_urllib=tk.Button(read, text="print(urllib)", command=show_url_urllib)
-        sshow_url_urllib.place(x=70, y=175)
+
         
         sshow_url_requests=tk.Button(read, text="print(requests)", command=show_url_requests)
         sshow_url_requests.place(x=70, y=150)
@@ -61,9 +69,13 @@ def show_url_urllib():
            fx = urllib.request.urlopen(enter_url.get)
            print(fx.read())
 def show_url_requests():
-        url = enter_url.get()
-        r = requests.get(url)
-        print(r)
+        city = enter_url.get()  
+        url = city
+        data  = urllib.request.urlopen(url).read()
+        data1 = data.decode("utf-8")
+        f = open(r"C:\Users\Arthu\Documents\python\open.v1.html", "w", encoding='utf8')
+        f.write(data1)
+
 def print_url():
         f = open('open.v1.html','w')
         url = enter_url.get()
@@ -114,6 +126,31 @@ def runprogram():
 ##        <head></head>
 ##        <body><p>Hello Beans!</p></body>
 ##        </html>"""
+def wikipedia():
+        global wiki_q
+        
+        
+
+        
+        wikiwindow=tk.Tk()
+        wikiwindow.geometry("250x200+500+500")
+        wiki_q=tk.Entry(wikiwindow)
+        wiki_q.place(x=50, y=0)
+        wiki_s=tk.Entry(wikiwindow)
+        wiki_s.place(x=50, y=50)
+        wiki_submit=tk.Button(wikiwindow, command=print_wiki, text= "article")
+        wiki_submit.place(x=50, y=100)
+        
+def print_wiki():
+        p = wiki.page(wiki_q.get())
+        print(wiki.summary(p))
+        print("-------------------------------------")
+        print(p.url)
+        print("-------------------------------------")
+        print(p.content)
+
+        print(p.title)
+
 
 def web():
         frame = tkinterweb.HtmlFrame(window)
@@ -155,7 +192,7 @@ def gettasks_terminal():
         print(output)
 def lock():
         explorer="explorer.exe"
-        os.system("taskkill /f /im "+explorer)
+        os.system("TASKKILL/? "+explorer)
         
         locker=tk.Tk()
         locker.config(bg="black")
@@ -286,31 +323,41 @@ def menu():
     filemenu.add_command(label="Chrome1", command=chromeschool)
     filemenu.add_command(label="News", command=bbcnews)
     filemenu.add_command(label="web", command=web)
+    filemenu.add_command(label="wikipedia-terminal", command=wikipedia)
     filemenu.add_separator()
     filemenu.add_command(label="news(visual)", command=newsbbc)
-    menubar.add_cascade(label="File", menu=filemenu)
+
+    menubar.add_cascade(label="Web", menu=filemenu)
+
     lockmenu=tk.Menu(menubar, tearoff=0)
  
     
     helpmenu = tk.Menu(menubar, tearoff=0)
     helpmenu.add_command(label="freezem(TESTING5)", command=freezem)
+    helpmenu.add_command(label="CAM_USB2.0 PC CAMERA/g/s/", command=grey_camera)
+    helpmenu.add_command(label="CAM_USB2.0 PC CAMERA/colour/esc/", command=color_camera)
+    helpmenu.add_separator()
     helpmenu.add_command(label="urllib)", command=readurl)
-    
-    lockmenu.add_command(label="destroy()", command=clearwindow)
-    lockmenu.add_command(label="lock(TESTING)", command=lock)
     helpmenu.add_command(label="Restart", command=lambda: [menu(), delete()])
     helpmenu.add_command(label="taskmgr", command=starttaskmgr)
+
     helpmenu.add_command(label="tasks(ter)", command=gettasks_terminal)
     helpmenu.add_command(label="wifi(ter)", command=wificonnect_terminal)
+    
     helpmenu.add_command(label="Run", command=runprogram)
     helpmenu.add_command(label="explorer", command=launch_explorer)
     helpmenu.add_command(label="darktitlebar(TESTING)", command=dark_title_bar)
+
+    lockmenu.add_command(label="destroy()", command=clearwindow)
+    lockmenu.add_command(label="lock(TESTING)", command=lock)
     lockmenu.add_command(label="krec", command=krecordstart)
     lockmenu.add_command(label="mrec", command=recmouse)
+    lockmenu.add_command(label="wait()", command=wait)
     lockmenu.add_command(label="print mouse actions", command=recmouseprint)
     lockmenu.add_command(label="printkrec", command=printkrecord)
     lockmenu.add_command(label="closeexplorer", command=closeexplorer)
     lockmenu.add_command(label="openurl", command=open_url)
+
     menubar.add_cascade(label="Help", menu=helpmenu)
     menubar.add_cascade(label="w", menu=lockmenu)
 
@@ -324,40 +371,4 @@ passworddef()
 
 
 
-
 password.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
